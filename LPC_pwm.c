@@ -14,16 +14,8 @@
 
 uint32_t match_counter0, match_counter1;
 
-//Kontrollstruktur für eine PWM
-typedef struct
-{
-	uint8_t used;
-	uint8_t cycle;
-	uint8_t handle;
-	
-}PWMCTRL;
+PWMCTRL pwm_ctrl[PWM_COUNT];//!< sichert den Tastaturwert im Interrupt-Handler SPI
 
-PWMCTRL pwm_ctrl[PWM_COUNT];
 
 /*
 void PWM1_IRQHandler (void) 
@@ -45,7 +37,7 @@ struct pwmCTRL pwm[PWM_COUNT];
 /******************PWM_open*****************************************/
 /**
  * @brief	Exlusive Reservierung 
- * @return	void
+ * @return	Handle des verwendeten PWMs
  * @param   Nummer der PWM
  *******************************************************************/
 uint8_t PWM_open(uint8_t pwmNumber)
@@ -64,7 +56,13 @@ uint8_t PWM_open(uint8_t pwmNumber)
 }
 
 
-
+/******************PWM_init*****************************************/
+/**
+ * @brief	Jeweilige PWM wird initialisiert
+ * @return	Handle des verwendeten PWMs
+ * @param   PWM Handle
+ * @param   Zyklusdauer für MR0(Haupt-PWM Timer)
+ *******************************************************************/
 void PWM_init(uint8_t pwm_handle, uint32_t cycle)
 {
 
@@ -104,9 +102,15 @@ void PWM_init(uint8_t pwm_handle, uint32_t cycle)
 		LPC_PWM1->PR = 17;							// Prescale = 18 = 18MHz/18	= 1MHz
 		LPC_PWM1->MR0 = cycle;					//Main cyclce
 	}
-
 }
 
+/******************PWM_set*****************************************/
+/**
+ * @brief	Einstellung welche PWM erlaubt wird und Zykluszeit der jeweiligen PWM
+ * @return	Handle der verwendeten PWMs
+ * @param   PWM Handle
+ * @param   Zyklusdauer für jeweilige PWM
+ *******************************************************************/
 void PWM_set(uint8_t pwm_handle, uint32_t cycle)
 {
 
@@ -115,23 +119,23 @@ void PWM_set(uint8_t pwm_handle, uint32_t cycle)
 		switch(pwm_handle)
 		{
 			case PWM1: 	LPC_PWM1->MR1 = cycle;
-									LPC_PWM1->LER |= LER1_EN;
-									break;
+						LPC_PWM1->LER |= LER1_EN;
+						break;
 			case PWM2: 	LPC_PWM1->MR2 = cycle;	
-									LPC_PWM1->LER |= LER2_EN;
-									break;
+						LPC_PWM1->LER |= LER2_EN;
+						break;
 			case PWM3:	LPC_PWM1->MR3 = cycle;
-									LPC_PWM1->LER |= LER3_EN;
-									break;
+						LPC_PWM1->LER |= LER3_EN;
+						break;
 			case PWM4:	LPC_PWM1->MR4 = cycle;
-									LPC_PWM1->LER |= LER4_EN;
-									break;
+						LPC_PWM1->LER |= LER4_EN;
+						break;
 			case PWM5:	LPC_PWM1->MR5 = cycle;
-									LPC_PWM1->LER |= LER5_EN;
-									break;
+						LPC_PWM1->LER |= LER5_EN;
+						break;
 			case PWM6:	LPC_PWM1->MR6 = cycle;
-									LPC_PWM1->LER |= LER6_EN;
-									break;
+						LPC_PWM1->LER |= LER6_EN;
+						break;
 		}
 	}
 

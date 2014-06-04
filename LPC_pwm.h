@@ -90,8 +90,17 @@
 
 enum pwmCount{PWM1, PWM2, PWM3, PWM4, PWM5, PWM6}; //Auswahl für PWMs
 
-extern void PWM_open(uint8_t pwmNumber);
-extern void PWM_init(uint32_t cycle);
+//Kontrollstruktur für eine PWM
+typedef struct
+{
+	uint8_t used;
+	uint8_t cycle;
+	uint8_t handle;
+	
+}PWMCTRL;
+
+extern uint8_t PWM_open(uint8_t pwmNumber);
+extern void PWM_init(uint8_t pwm_handle, uint32_t cycle);
 extern void PWM_set(uint8_t pwm_handle, uint32_t cycle);
 extern void PWM_start(uint8_t pwm_handle);
 extern void PWM_stop(uint8_t pwm_handle);

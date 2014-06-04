@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "lpc17xx.h"
-#include "pwm.h"
+#include "LPC_pwm.h"
 
 uint32_t match_counter0, match_counter1;
 
@@ -32,7 +32,7 @@ void PWM1_IRQHandler (void)
 }
 */
 
-struct pwmCTRL pwm[PWM_COUNT];
+PWMCTRL pwm_ctrl[PWM_COUNT];
 
 /******************PWM_open*****************************************/
 /**
@@ -44,10 +44,10 @@ uint8_t PWM_open(uint8_t pwmNumber)
 {
 	if(pwmNumber < PWM_COUNT)
 	{
-		if(pwm_ctrl[pwmNumber].USED != PWM_USED)
+		if(pwm_ctrl[pwmNumber].used != PWM_USED)
 		{
 			pwm_ctrl[pwmNumber].handle = pwmNumber;
-			pwm_ctrl[pwmNumber].USED = PWM_USED;
+			pwm_ctrl[pwmNumber].used = PWM_USED;
 			return pwm_ctrl[pwmNumber].handle;
 		}
 		return ERROR;//PWM already used

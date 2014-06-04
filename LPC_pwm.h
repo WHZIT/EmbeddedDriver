@@ -100,7 +100,7 @@ typedef struct
 }PWMCTRL;
 
 extern uint8_t PWM_open(uint8_t pwmNumber);
-extern void PWM_init(uint8_t pwm_handle, uint32_t cycle);
+extern void PWM_init(uint32_t cycle);
 extern void PWM_set(uint8_t pwm_handle, uint32_t cycle);
 extern void PWM_start(uint8_t pwm_handle);
 extern void PWM_stop(uint8_t pwm_handle);

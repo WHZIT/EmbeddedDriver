@@ -63,45 +63,21 @@ uint8_t PWM_open(uint8_t pwmNumber)
  * @param   PWM Handle
  * @param   Zyklusdauer für MR0(Haupt-PWM Timer)
  *******************************************************************/
-void PWM_init(uint8_t pwm_handle, uint32_t cycle)
+void PWM_init(uint32_t cycle)
 {
 
 	//uintptr_t pwmConp = (uintptr_t *) PCONP_REGISTER;
 	//uintptr_t pwmPerCLK = (uintptr_t *) PCLKSELR0;
-	if(pwm_handle < PWM_COUNT)
-	{
 		// *pwmConp |= (PWM1_CLK_ENABLE);			//pheriphal Clock enabled
 		// *pwmPerCLK |= (PWM1_CLK_CCLK);			//set Perripheral Clock
  	
 		match_counter1 = 0;
-		
-		switch(pwm_handle)
-		{
-			case PWM1: 		LPC_PINCON->PINSEL4 &= ~(0x03<<0); 	// Reset P2.0 = GPIO   
-							LPC_PINCON->PINSEL4 |=  (0x01<<0);	// Config P2.0 = PWM1
-							break;
-			case PWM2: 		LPC_PINCON->PINSEL4 &= ~(0x03<<2); 	// Reset P2.1 = GPIO   
-							LPC_PINCON->PINSEL4 |=  (0x01<<2);	// Config P2.1 = PWM2
-							break;
-			case PWM3:		LPC_PINCON->PINSEL4 &= ~(0x03<<4); 	// Reset P2.2 = GPIO   
-							LPC_PINCON->PINSEL4 |=  (0x01<<4);	// Config P2.2 = PWM3
-							break;
-			case PWM4:		LPC_PINCON->PINSEL4 &= ~(0x03<<6); 	// Reset P2.3 = GPIO   
-							LPC_PINCON->PINSEL4 |=  (0x01<<6);	// Config P2.3 = PWM4
-							break;
-			case PWM5:		LPC_PINCON->PINSEL4 &= ~(0x03<<8); 	// Reset P2.4 = GPIO   
-							LPC_PINCON->PINSEL4 |=  (0x01<<8);	// Config P2.4 = PWM5
-							break;
-			case PWM6:		LPC_PINCON->PINSEL4 &= ~(0x03<<10);	// Reset P2.5 = GPIO   
-							LPC_PINCON->PINSEL4 |=  (0x01<<10);	// Config P2.5 = PWM6
-							break;
-		}
-		
+
 		LPC_PWM1->TCR = TCR_RESET;			// Counter Reset 
 		//LPC_PWM1->PR = 0x00;					// Prescale = 1 -> count frequency:Fpclk(72MHz/4=18MHz)
 		LPC_PWM1->PR = 17;							// Prescale = 18 = 18MHz/18	= 1MHz
 		LPC_PWM1->MR0 = cycle;					//Main cyclce
-	}
+
 }
 
 /******************PWM_set*****************************************/
@@ -118,22 +94,34 @@ void PWM_set(uint8_t pwm_handle, uint32_t cycle)
 	{
 		switch(pwm_handle)
 		{
-			case PWM1: 	LPC_PWM1->MR1 = cycle;
-						LPC_PWM1->LER |= LER1_EN;
-						break;
-			case PWM2: 	LPC_PWM1->MR2 = cycle;	
+			case PWM1: 	LPC_PINCON->PINSEL4 &= ~(0x03<<0); 	// Reset P2.0 = GPIO   
+									LPC_PINCON->PINSEL4 |=  (0x01<<0);	// Config P2.0 = PWM1
+									LPC_PWM1->MR1 = cycle;
+									LPC_PWM1->LER |= LER1_EN;
+									break;
+			case PWM2: 	LPC_PINCON->PINSEL4 &= ~(0x03<<2); 	// Reset P2.1 = GPIO   
+							LPC_PINCON->PINSEL4 |=  (0x01<<2);	// Config P2.1 = PWM2
+				LPC_PWM1->MR2 = cycle;	
 						LPC_PWM1->LER |= LER2_EN;
 						break;
-			case PWM3:	LPC_PWM1->MR3 = cycle;
+			case PWM3:	LPC_PINCON->PINSEL4 &= ~(0x03<<4); 	// Reset P2.2 = GPIO   
+							LPC_PINCON->PINSEL4 |=  (0x01<<4);	// Config P2.2 = PWM3
+				LPC_PWM1->MR3 = cycle;
 						LPC_PWM1->LER |= LER3_EN;
 						break;
-			case PWM4:	LPC_PWM1->MR4 = cycle;
+			case PWM4:	LPC_PINCON->PINSEL4 &= ~(0x03<<6); 	// Reset P2.3 = GPIO   
+							LPC_PINCON->PINSEL4 |=  (0x01<<6);	// Config P2.3 = PWM4
+				LPC_PWM1->MR4 = cycle;
 						LPC_PWM1->LER |= LER4_EN;
 						break;
-			case PWM5:	LPC_PWM1->MR5 = cycle;
+			case PWM5:	LPC_PINCON->PINSEL4 &= ~(0x03<<8); 	// Reset P2.4 = GPIO   
+							LPC_PINCON->PINSEL4 |=  (0x01<<8);	// Config P2.4 = PWM5
+				LPC_PWM1->MR5 = cycle;
 						LPC_PWM1->LER |= LER5_EN;
 						break;
-			case PWM6:	LPC_PWM1->MR6 = cycle;
+			case PWM6:	LPC_PINCON->PINSEL4 &= ~(0x03<<10);	// Reset P2.5 = GPIO   
+							LPC_PINCON->PINSEL4 |=  (0x01<<10);	// Config P2.5 = PWM6
+				LPC_PWM1->MR6 = cycle;
 						LPC_PWM1->LER |= LER6_EN;
 						break;
 		}

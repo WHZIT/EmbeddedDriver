@@ -14,12 +14,16 @@
 
 uint32_t match_counter0, match_counter1;
 
-//Konrtollstruktur für eine PWM
-struct pwmCTRL
+//Kontrollstruktur für eine PWM
+typedef struct
 {
-	uint8_t use;
+	uint8_t used;
+	uint8_t cycle;
 	uint8_t handle;
-};
+	
+}PWMCTRL;
+
+PWMCTRL pwm_ctrl[PWM_COUNT];
 
 /*
 void PWM1_IRQHandler (void) 
@@ -50,31 +54,11 @@ void PWM_open(uint8_t pwmNumber)
 	{
 		switch(pwmNumber)
 		{
-			case PWM1: 	
-									LPC_PINCON->PINSEL4 &= ~(0x03<<0); 	// Reset P2.0 = GPIO   
-									LPC_PINCON->PINSEL4 |=  (0x01<<0);	// Config P2.0 = PWM1
-									break;
-			case PWM2: 	
-									LPC_PINCON->PINSEL4 &= ~(0x03<<2); 	// Reset P2.1 = GPIO   
-									LPC_PINCON->PINSEL4 |=  (0x01<<2);	// Config P2.1 = PWM2
-									break;
-			case PWM3:	
-									LPC_PINCON->PINSEL4 &= ~(0x03<<4); 	// Reset P2.2 = GPIO   
-									LPC_PINCON->PINSEL4 |=  (0x01<<4);	// Config P2.2 = PWM3
-									break;
-			case PWM4:	
-									LPC_PINCON->PINSEL4 &= ~(0x03<<6); 	// Reset P2.3 = GPIO   
-									LPC_PINCON->PINSEL4 |=  (0x01<<6);	// Config P2.3 = PWM4
-									break;
-			case PWM5:	
-									LPC_PINCON->PINSEL4 &= ~(0x03<<8); 	// Reset P2.4 = GPIO   
-									LPC_PINCON->PINSEL4 |=  (0x01<<8);	// Config P2.4 = PWM5
-									break;
-			case PWM6:	
-									LPC_PINCON->PINSEL4 &= ~(0x03<<10);	// Reset P2.5 = GPIO   
-									LPC_PINCON->PINSEL4 |=  (0x01<<10);	// Config P2.5 = PWM6
-									break;
+			case PWM1:  pwm_ctrl[PWM1]->USED = PWM_USED;
+						
+						break;
 		}
+
 	}
 }
 
@@ -85,7 +69,7 @@ void PWM_init(/*uint8_t pwm_handle,*/ uint32_t cycle)
 
 	//uintptr_t pwmConp = (uintptr_t *) PCONP_REGISTER;
 	//uintptr_t pwmPerCLK = (uintptr_t *) PCLKSELR0;
-	/*if(pwm_handle < PWM_COUNT)
+	if(pwm_handle < PWM_COUNT)
 	{
 		// *pwmConp |= (PWM1_CLK_ENABLE);			//pheriphal Clock enabled
 		// *pwmPerCLK |= (PWM1_CLK_CCLK);			//set Perripheral Clock
@@ -119,7 +103,7 @@ void PWM_init(/*uint8_t pwm_handle,*/ uint32_t cycle)
 									LPC_PINCON->PINSEL4 |=  (0x01<<10);	// Config P2.5 = PWM6
 									break;
 		}
-		*/
+		
 		LPC_PWM1->TCR = TCR_RESET;			// Counter Reset 
 		//LPC_PWM1->PR = 0x00;					// Prescale = 1 -> count frequency:Fpclk(72MHz/4=18MHz)
 		LPC_PWM1->PR = 17;							// Prescale = 18 = 18MHz/18	= 1MHz

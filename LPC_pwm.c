@@ -48,18 +48,18 @@ struct pwmCTRL pwm[PWM_COUNT];
  * @return	void
  * @param   Nummer der PWM
  *******************************************************************/
-void PWM_open(uint8_t pwmNumber)
+uintprt_t PWM_open(uint8_t pwmNumber)
 {
 	if(pwmNumber < PWM_COUNT)
 	{
-		switch(pwmNumber)
+		if(pwm_ctrl[pwmNumber].USED != PWM_USED)
 		{
-			case PWM1:  pwm_ctrl[PWM1]->USED = PWM_USED;
-						
-						break;
+			pwm_ctrl[pwmNumber].USED = PWM_USED;
+			return pwm_ctrl[pwmNumber];
 		}
-
+		return ERROR;//PWM already used
 	}
+	return ERROR;
 }
 
 

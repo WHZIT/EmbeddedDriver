@@ -82,6 +82,7 @@
 #define PCONP_REGISTER 		0x400FC0C4
 #define PCLKSEL0_REGISTER 	0x400FC1A8
 #define PWM_COUNT			6			//Anzahl der möglichen PWM
+#define ERROR				0
 
 #define PWM1_CLK_ENABLE		(1<<1)
 #define PWM1_CLK_CCLK		(1<<11)	//PCLK_peripheral = CCLK

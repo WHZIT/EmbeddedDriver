@@ -17,10 +17,13 @@ SPI_MASTER SSP_MASTER[SPIMaster_Number];
 
 extern volatile  unsigned char ucRx_byte ;  //!< sichert den Tastaturwert im Interrupt-Handler SPI
 
+/******************SPI_open*****************************************/
 /**
-* @brief  Moeglichkeit verwendete Ports auzuwerten 
-* Aufruf wird in den Funktionen init und close des SPI-Treiber verwendet
-*/
+ * @brief	Gibt einen Zeiger auf eine spezielle Struktur des GPIO
+ *			zurueck mit der alle Eigenschaften angepasst werden koennen
+ * @return	Zeiger auf GPIO Struktur
+ * @param   Portnummer
+ *******************************************************************/
 LPC_GPIO_TypeDef *GPIO_GetPointer(uint8_t portNum) 
 {
 	LPC_GPIO_TypeDef *pGPIO = NULL;

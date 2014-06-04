@@ -37,13 +37,13 @@ TIMERHANDLE timer_open(uint8_t TimerNumber)
 				case TIMER1:	timer_struct[TimerNumber].USED = TRUE;
 								timer_struct[TimerNumber].TimerNumber = TimerNumber;
 								break;
-				/*case TIMER2:	timer_struct[TimerNumber].USED = TRUE;
+				case TIMER2:	timer_struct[TimerNumber].USED = TRUE;
 								timer_struct[TimerNumber].TimerNumber = TimerNumber;
 								break;
 				case TIMER3:	timer_struct[TimerNumber].USED = TRUE;
 								timer_struct[TimerNumber].TimerNumber = TimerNumber;
 								break;
-				*/
+				
 			}
 		return (&(timer_struct[TimerNumber]));	
 		}
@@ -78,7 +78,7 @@ uint8_t timer_init(TIMERHANDLE TimerHandle, uint32_t TimerInterval)
 						LPC_TIM1->MCR = 3;										/* Interrupt and Reset on MR1 */
 						NVIC_EnableIRQ(TIMER1_IRQn);
 						return (TRUE);
-		/*case TIMER2:	timer2_counter = 0;
+		case TIMER2:	timer2_counter = 0;
 						LPC_TIM2->MR2 = TimerInterval;
 						LPC_TIM2->MCR = 3;										// Interrupt and Reset on MR2 
 						NVIC_EnableIRQ(TIMER2_IRQn);
@@ -88,7 +88,6 @@ uint8_t timer_init(TIMERHANDLE TimerHandle, uint32_t TimerInterval)
 						LPC_TIM3->MCR = 3;										// Interrupt and Reset on MR3 
 						NVIC_EnableIRQ(TIMER3_IRQn);
 						return (TRUE);
-		*/
 	}
 	return (FALSE);
 }

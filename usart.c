@@ -6,18 +6,9 @@
 
 
 
-#define USART_NOT_IN_USE				0
-#define USART_IN_USE						1
-#define PCONP_REGISTER					0x400FC0C4
-#define UART0_START_REGISTER		0x4000C000
-#define UART1_START_REGISTER		0x40010000
-#define UART2_START_REGISTER		0x40098000
-#define UART3_START_REGISTER		0x4009C000
-#define UART_LSR_OFFSET					14
-#define UART_FIFOLVL_OFFSET			58
 
-struct usart_mgmt{uint8_t isInUse; uint8_t handle; uintptr_t start_register;};
-struct usart_mgmt usart_array[4];
+
+struct USART_MGMT usart_array[4];
 
 uint16_t usart_calculate_divider(uint32_t baudrate);
 
@@ -80,7 +71,7 @@ uint8_t usart_configure(uint8_t handle, uint32_t bitrate, uint8_t parity, uint8_
 	uintptr_t *PINSEL0;
 	uintptr_t *PINMODE0;
 	
-	//Implemntierung nur für USART0
+	//Implemntierung nur fÃ¼r USART0
 	U0LCR=0x4000C00C;
 	U0DLL=0x4000C000;
 	U0DLM=0x4000C004;
@@ -152,7 +143,7 @@ uint8_t usart_read(uint8_t handle, uint8_t *destination, uint8_t read_length)
 	uintptr_t *UxLSR;
 	uintptr_t *UxFIFOLVL;
 	uintptr_t *UxRBR;
-	uint8_t rx_fifo_level; //Füllstand des Empfangspuffers
+	uint8_t rx_fifo_level; //FÃ¼llstand des Empfangspuffers
 	uint8_t bytes_read; //Anzahl der Bytes die gelesen wurden
 	
 	bytes_read=0;
@@ -186,7 +177,7 @@ uint8_t usart_write(uint8_t handle, uint8_t *source, uint8_t length)
 	uintptr_t *U0LSR;
 	uint8_t i;
 	
-	//Implementierung nur für USART0
+	//Implementierung nur fÃ¼r USART0
 	U0THR=0x4000C000;
 	U0LSR=0x4000C014;
 	
@@ -240,4 +231,57 @@ uint16_t usart_calculate_divider(uint32_t baudrate)
 		return returnvalue;
 	}
 	return 0;
+}
+
+void usart_int_config(LPC_UART_TypeDef *UARTx, UART_INT_Type UARTIntConfig, UARTSTATE State)
+{
+	uint32_t temp;
+
+	switch(UARTIntConfig){
+		case UART_INTCFG_RBR:
+			tmp = UART_IER_RBRINT_EN;
+			break;
+		case UART_INTCFG_THRE:
+			tmp = UART_IER_THREINT_EN;
+			break;
+		case UART_INTCFG_RLS:
+			tmp = UART_IER_RLSINT_EN;
+			break;
+		case UART1_INTCFG_MS:
+			tmp = UART1_IER_MSINT_EN;
+			break;
+		case UART1_INTCFG_CTS:
+			tmp = UART1_IER_CTSINT_EN;
+			break;
+		case UART_INTCFG_ABEO:
+			tmp = UART_IER_ABEOINT_EN;
+			break;
+		case UART_INTCFG_ABTO:
+			tmp = UART_IER_ABTOINT_EN;
+			break;
+	}
+
+	if (NewState == ENABLE)
+	{
+		if ((LPC_UART1_TypeDef *) UARTx == LPC_UART1)
+		{
+			((LPC_UART1_TypeDef *)UARTx)->IER |= tmp;
+		}
+		else
+		{
+			UARTx->IER |= tmp;
+		}
+	}
+	else
+	{
+		if ((LPC_UART1_TypeDef *) UARTx == LPC_UART1)
+		{
+			((LPC_UART1_TypeDef *)UARTx)->IER &= (~tmp) & UART1_IER_BITMASK;
+		}
+		else
+		{
+			UARTx->IER &= (~tmp) & UART_IER_BITMASK;
+		}
+	}
+
 }

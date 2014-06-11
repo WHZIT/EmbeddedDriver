@@ -233,6 +233,7 @@ uint16_t usart_calculate_divider(uint32_t baudrate)
 	return 0;
 }
 
+//nur UART 0/2/3 möglich
 void usart_int_config(LPC_UART_TypeDef *UARTx, UART_INT_Type UARTIntConfig, UARTSTATE State)
 {
 	uint32_t temp;
@@ -263,25 +264,11 @@ void usart_int_config(LPC_UART_TypeDef *UARTx, UART_INT_Type UARTIntConfig, UART
 
 	if (NewState == ENABLE)
 	{
-		if ((LPC_UART1_TypeDef *) UARTx == LPC_UART1)
-		{
-			((LPC_UART1_TypeDef *)UARTx)->IER |= tmp;
-		}
-		else
-		{
-			UARTx->IER |= tmp;
-		}
+		UARTx->IER |= tmp;
 	}
 	else
 	{
-		if ((LPC_UART1_TypeDef *) UARTx == LPC_UART1)
-		{
-			((LPC_UART1_TypeDef *)UARTx)->IER &= (~tmp) & UART1_IER_BITMASK;
-		}
-		else
-		{
-			UARTx->IER &= (~tmp) & UART_IER_BITMASK;
-		}
+		UARTx->IER &= (~tmp) & UART_IER_BITMASK;
 	}
 
 }
